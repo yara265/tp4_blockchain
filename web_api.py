@@ -30,6 +30,26 @@ def register_user():
     else:
         return jsonify({"success": False, "message": f"Usuário {username} já existe."}), 409
 
+@app.route('/api/login', methods=['POST'])
+def login_user():
+    """Autentica um usuário."""
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    if not username or not password:
+        return jsonify({"success": False, "message": "Usuário e senha são obrigatórios"}), 400
+    
+    if bc_app.login(username, password):
+        return jsonify({
+            "success": True, 
+            "message": f"Login realizado com sucesso!",
+            "username": username,
+            "saldo": bc_app.users[username]["saldo"]
+        })
+    else:
+        return jsonify({"success": False, "message": "Usuário ou senha incorretos"}), 401
+
 @app.route('/api/transfer', methods=['POST'])
 def transfer_funds():
     """Processa uma transferência de fundos."""

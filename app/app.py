@@ -7,6 +7,12 @@ def cadastrar_usuario(username):
     if username in users:
         return False
     users[username] = {"senha":"123", "saldo":10}
+    # Cria um bloco para registrar o cadastro do usuário e o saldo inicial
+    blockchain.add_block({
+        "tipo": "cadastro",
+        "usuario": username,
+        "saldo_inicial": 10
+    })
     return True
 
 def login(username, senha):
@@ -19,5 +25,11 @@ def transferir(de, para, valor):
         return False
     users[de]["saldo"] -= valor
     users[para]["saldo"] += valor
-    blockchain.add_block({"de":de,"para":para,"valor":valor})
+    # Cria um bloco para registrar a transferência
+    blockchain.add_block({
+        "tipo": "transferencia",
+        "de": de,
+        "para": para,
+        "valor": valor
+    })
     return True
