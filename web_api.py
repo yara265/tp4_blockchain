@@ -110,6 +110,10 @@ def transfer_funds():
     if not all([sender, recipient, value]):
         return jsonify({"success": False, "message": "Dados de transferência incompletos."}), 400
     
+    # Verifica se admin está envolvido na transferência (não pode ser remetente nem destinatário)
+    if sender == "admin" or recipient == "admin":
+        return jsonify({"success": False, "message": "O admin não pode ser remetente ou destinatário de transferências."}), 400
+    
     # Verifica se o usuário logado pode fazer a transferência
     # Apenas o próprio usuário pode transferir (não admin transferindo por outros)
     if logged_user and not bc_app.is_admin(logged_user):
